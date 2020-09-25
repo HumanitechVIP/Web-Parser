@@ -1,0 +1,1 @@
+Log of when the web scraper runs, should be on the 10th of every month at 10 am
