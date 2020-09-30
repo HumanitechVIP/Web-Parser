@@ -4,7 +4,7 @@ import requests
 import webbrowser
 import schedule
 import time
-import datetime
+from datetime import datetime
 import pandas as pd
 import os
 
@@ -45,12 +45,12 @@ def make_csvs():
 
 
 def job():
-    day_of_month = datetime.now().day()
+    day_of_month = datetime.now().day
     print(datetime.now())
     if day_of_month != 10:
         return
     log_file = open("log.txt", "a")
-    log_file.write(datetime.now())
+    log_file.write(str(datetime.now()))
     log_file.close()
     get_files()
     make_csvs()
@@ -61,3 +61,4 @@ schedule.every().day.at("10:00").do(job)
 while True:
     schedule.run_pending()
     time.sleep(1)
+# job()
