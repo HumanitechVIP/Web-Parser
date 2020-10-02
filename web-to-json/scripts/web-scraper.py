@@ -37,7 +37,7 @@ def make_csvs():
         extra_trim = trim[:dot_index]
         # print(extra_trim)
         if ".xlsx" in file_string or ".xls" in file_string:
-            read_file = pd.read_excel("downloaded_files/" + trim, sheet_name=0, skiprows=7)
+            read_file = pd.read_excel("downloaded_files/" + trim, sheet_name=0, skiprows=6)
             read_file.to_csv("downloaded_files/csvs/" + extra_trim + ".csv", index=None, header=True)
             # continue
         else:
