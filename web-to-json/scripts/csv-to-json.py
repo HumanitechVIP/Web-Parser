@@ -2,9 +2,10 @@ import csv
 import json
 import re
 import sys
+from pathlib import Path
 
 NON_CITY_KEYS = set(["variety", "commodity", "unit", "weight", "code", "average", "max", "min", "stdev", "date"])
-PATH_TO_JSON_FOLDER = "../json/"
+PATH_TO_JSON_FOLDER = Path("../json/")
 
 def parse_args(args):
 	if (len(args) != 2):
@@ -16,7 +17,7 @@ def parse_args(args):
 
 def get_yyyy_mm_dd(csv_name):
   tmp = csv_name[-14:-4].split("-")
-  if len(tmp) is not 10 or tmp[2] != "-":
+  if len(tmp) is not 3:
     print("ERROR: Date in CSV name should be formatted DD-MM-YYYY\nExiting...")
     exit()
   tmp.reverse()
@@ -62,10 +63,10 @@ def csv_to_json(csv_name):
       for city in cities.keys():
         make_city_json(result, data, cities, city)
 
-    json_name = PATH_TO_JSON_FOLDER + date + ".json"
+    json_name = PATH_TO_JSON_FOLDER / (date + ".json")
     with open(json_name, 'w', newline='') as jsonfile:
       json.dump(result, jsonfile, indent=4, sort_keys=True)
-      print("Success. " + json_name + " created.")
+      print("Success. " + str(json_name) + " created.")
 
 def main():
 	csv_name = parse_args(sys.argv)
