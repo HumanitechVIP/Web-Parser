@@ -8,7 +8,7 @@ PATH_TO_JSON_FOLDER = "../json/"
 
 def parse_args(args):
 	if (len(args) != 2):
-		print("Run file with `python csv-to-json.py <path-to-csv>'")
+		print("Run file with `python csv-to-json.py <path-to-csv>'.\nExiting...")
 		exit()
 	else:
 		csv_name = args[1] if args[1][-4:] == ".csv" else args[1] + ".csv"
@@ -16,6 +16,9 @@ def parse_args(args):
 
 def get_yyyy_mm_dd(csv_name):
   tmp = csv_name[-14:-4].split("-")
+  if len(tmp) is not 10 or tmp[2] != "-":
+    print("ERROR: Date in CSV name should be formatted DD-MM-YYYY\nExiting...")
+    exit()
   tmp.reverse()
   return "-".join(tmp)
 
