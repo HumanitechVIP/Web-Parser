@@ -13,6 +13,7 @@ source = requests.get('http://www.nafis.go.ke/category/market-info/').text
 CSV_PATH = Path("downloaded_files/csvs/")
 EXCEL_PATH = Path("downloaded_files/")
 
+
 def get_files():
     soup = BeautifulSoup(source, 'lxml')
     div = soup.find("div", {"id": "content"})
@@ -42,6 +43,7 @@ def make_csvs():
             read_file = pd.read_excel(EXCEL_PATH / trim, sheet_name=0, skiprows=6)
             read_file.to_csv(CSV_PATH / (extra_trim + ".csv"), index=None, header=True)
 
+
 def job():
     day_of_month = datetime.now().day
     print(datetime.now())
@@ -52,6 +54,7 @@ def job():
     log_file.close()
     get_files()
     make_csvs()
+
 
 # schedule.every().day.at("10:00").do(job)
 
