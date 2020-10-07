@@ -50,7 +50,7 @@ def get_file():
 def make_csvs():
     directory = os.fsencode('downloaded_files')
     for file in os.scandir(directory):
-        print(file)
+        # print(file)
         file_string = str(file.path)
         start_index = max(file_string.find("\\"), file_string.find("/"))  # os
         # start_index = file_string.find("\\") #  win
@@ -80,7 +80,10 @@ def make_csv():
         dot_index = trim.find(".xls")
         extra_trim = trim[:dot_index]
         extra_trim = extra_trim.replace(".", "-")
-        print(extra_trim)
+        # print(extra_trim)
+        if len(extra_trim) == 9:
+            extra_trim = "0" + extra_trim
+        # print(extra_trim)
         if ".xlsx" in file_string or ".xls" in file_string:
             csv_name = extra_trim + ".csv"
             # read_file = pd.read_excel(EXCEL_PATH / trim, sheet_name=0, skiprows=6)  #os
@@ -91,8 +94,7 @@ def make_csv():
             break
     if csv_name is None:
         raise Exception("error - file not found")
-    # return str(CSV_PATH) + "\\" + csv_name
-    return csv_name
+    return str(CSV_PATH) + "\\" + csv_name
 
 
 def scheduled_job():
@@ -104,17 +106,18 @@ def scheduled_job():
     log_file.write(str(datetime.now()))
     log_file.close()
     get_file()
-    time.sleep(10)
-    csv_name = make_csv()  # returns the name
-    # makeJSON.csv_to_json(csv_name)
+    name = make_csv()  # returns the name
+    # print(name)
+    time.sleep(15)
+    makeJSON.csv_to_json(name)
 
 
 # SCHEDULING CODE
-# schedule.every().day.at("10:00").do(scheduled_job)
+schedule.every().day.at("10:00").do(scheduled_job)
 # job checks the date and only runs on the 10th
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
+while True:
+    schedule.run_pending()
+    time.sleep(1)
 
 # if you want to just run the code that gets all the files and makes them csvs
 # get_files()
@@ -122,9 +125,9 @@ def scheduled_job():
 
 # if you want to just run the code that gets the first file, makes a csv, deletes it, and makes a json
 # (what is scheduled)
-get_file()
-name = make_csv()  # returns the name
-print(name)
+# get_file()
+# name = make_csv()  # returns the name
+# # print(name)
 # time.sleep(15)
 # makeJSON.csv_to_json(name)
 
