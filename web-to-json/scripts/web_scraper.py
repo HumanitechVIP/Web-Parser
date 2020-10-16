@@ -115,11 +115,11 @@ def scheduled_job():
 
 
 # SCHEDULING CODE
-# schedule.every().day.at("10:00").do(scheduled_job)
 # job checks the date and only runs on the 10th
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
+schedule.every().day.at("10:00").do(scheduled_job)
+while True:
+    schedule.run_pending()
+    time.sleep(1)
 
 # if you want to just run the code that gets all the files and makes them csvs
 # get_files()
@@ -127,10 +127,10 @@ def scheduled_job():
 
 # if you want to just run the code that gets the first file, makes a csv, deletes it, and makes a json
 # (what is scheduled)
-get_file()
-name = make_csv()  # returns the name
-print(name)
-time.sleep(15)
-makeJSON.csv_to_json(name)
+# get_file()
+# name = make_csv()  # returns the name
+# print(name)
+# time.sleep(15)
+# makeJSON.csv_to_json(name)
 
 

@@ -3,9 +3,13 @@ import json
 import re
 import sys
 from pathlib import Path
+import requests
+import pprint
+import time
 
 NON_CITY_KEYS = set(["variety", "commodity", "unit", "weight", "code", "average", "max", "min", "stdev", "date"])
 PATH_TO_JSON_FOLDER = Path("../json/")
+url = "https://croppricingapi.herokuapp.com/api/cropprices"
 
 # def parse_args(args):
 #     if len(args) != 2:
@@ -68,12 +72,23 @@ def csv_to_json(csv_name):
 
             for city in cities.keys():
                 make_city_json(result, data, cities, city)
+            push_json_to_api(result)
 
         json_name = PATH_TO_JSON_FOLDER / (date + ".json")
         with open(json_name, 'w', newline='') as jsonfile:
             json.dump(result, jsonfile, indent=4, sort_keys=True)
             print("Success. " + str(json_name) + " created.")
 
+def push_json_to_api(json_file):
+    # pprint.pprint(json)
+    for k in json_file:
+        # pprint.pprint(json[k])
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        response = requests.post(url, json=json_file[k])
+        print(response.text)
+        time.sleep(2)
 
 # def main():
 #     csv_name = parse_args(sys.argv)
