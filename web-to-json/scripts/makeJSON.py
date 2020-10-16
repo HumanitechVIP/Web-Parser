@@ -18,7 +18,7 @@ PATH_TO_JSON_FOLDER = Path("../json/")
 
 def get_yyyy_mm_dd(csv_name):
     tmp = csv_name[-14:-4].split("-")
-    if len(tmp) is not 3:
+    if len(tmp) != 3:
         print("ERROR: Date in CSV name should be formatted DD-MM-YYYY\nExiting...")
         exit()
     tmp.reverse()
@@ -38,7 +38,7 @@ def get_cities_and_other_data(ordered_dict):
 
 
 def set_variety(data, curr_variety):
-    if 'variety' in data.keys() and data['variety'].strip() is not '':
+    if 'variety' in data.keys() and data['variety'].strip() != '':
         curr_variety = data['variety']
     else:
         data['variety'] = curr_variety

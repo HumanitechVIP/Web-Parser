@@ -1,1 +1,1 @@
-Log of when the web scraper runs, should be on the 10th of every month at 10 am2020-09-29 20:52:24.9537392020-09-29 20:53:22.0464192020-09-29 20:53:27.8106842020-09-29 20:53:34.5061362020-09-29 20:53:40.7723492020-09-29 20:54:58.496413
+Log of when the web scraper runs

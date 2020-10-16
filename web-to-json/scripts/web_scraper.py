@@ -8,7 +8,7 @@ from datetime import datetime
 import pandas as pd
 import os
 from pathlib import Path
-import makeJSON
+import makeJSON  # if this isn't found make sure scripts is src root
 
 # IMPORTANT NOTE: in chrome you need to set the downloads folder to downloaded_files
 
@@ -80,10 +80,11 @@ def make_csv():
         dot_index = trim.find(".xls")
         extra_trim = trim[:dot_index]
         extra_trim = extra_trim.replace(".", "-")
-        # print(extra_trim)
+        print(extra_trim)
         if len(extra_trim) == 9:
             extra_trim = "0" + extra_trim
-        # print(extra_trim)
+        extra_trim = extra_trim.replace("Daily-", "")
+        print(extra_trim)
         if ".xlsx" in file_string or ".xls" in file_string:
             csv_name = extra_trim + ".csv"
             # read_file = pd.read_excel(EXCEL_PATH / trim, sheet_name=0, skiprows=6)  #os
@@ -98,10 +99,11 @@ def make_csv():
 
 
 def scheduled_job():
-    day_of_month = datetime.now().day
-    print(datetime.now())
-    if day_of_month != 10:
-        return
+    # this was when we thought they posted monthly but it's more frequent
+    # day_of_month = datetime.now().day
+    # print(datetime.now())
+    # if day_of_month != 10:
+    #     return
     log_file = open("log.txt", "a")
     log_file.write(str(datetime.now()))
     log_file.close()
@@ -113,11 +115,11 @@ def scheduled_job():
 
 
 # SCHEDULING CODE
-schedule.every().day.at("10:00").do(scheduled_job)
+# schedule.every().day.at("10:00").do(scheduled_job)
 # job checks the date and only runs on the 10th
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
 
 # if you want to just run the code that gets all the files and makes them csvs
 # get_files()
@@ -125,10 +127,10 @@ while True:
 
 # if you want to just run the code that gets the first file, makes a csv, deletes it, and makes a json
 # (what is scheduled)
-# get_file()
-# name = make_csv()  # returns the name
-# # print(name)
-# time.sleep(15)
-# makeJSON.csv_to_json(name)
+get_file()
+name = make_csv()  # returns the name
+print(name)
+time.sleep(15)
+makeJSON.csv_to_json(name)
 
 
