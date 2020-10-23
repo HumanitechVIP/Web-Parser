@@ -7,20 +7,15 @@ import requests
 import pprint
 import time
 
+# Imports for static type-checking
+from collections import OrderedDict
+from typing import Dict
+
 NON_CITY_KEYS = set(["variety", "commodity", "unit", "weight", "code", "average", "max", "min", "stdev", "date"])
 PATH_TO_JSON_FOLDER = Path("../json/")
 url = "https://croppricingapi.herokuapp.com/api/cropprices"
 
-# def parse_args(args):
-#     if len(args) != 2:
-#         print("Run file with `python makeJSON.py <path-to-csv>'.\nExiting...")
-#         exit()
-#     else:
-#         csv_name = args[1] if args[1][-4:] == ".csv" else args[1] + ".csv"
-#         return csv_name
-
-
-def get_yyyy_mm_dd(csv_name):
+def get_yyyy_mm_dd(csv_name: str) -> str:
     tmp = csv_name[-14:-4].split("-")
     if len(tmp) != 3:
         print("ERROR: Date in CSV name should be formatted DD-MM-YYYY\nExiting...")
@@ -29,11 +24,11 @@ def get_yyyy_mm_dd(csv_name):
     return "-".join(tmp)
 
 
-def clean_str(s):
+def clean_str(s: str) -> str:
     return s.lower().strip(".").strip()
 
 
-def get_cities_and_other_data(ordered_dict):
+def get_cities_and_other_data(ordered_dict: OrderedDict) -> (Dict, Dict):
     data = dict(ordered_dict)
     data = dict((clean_str(k), clean_str(v)) for k, v in data.items())
     cities = dict((k, v) for k, v in data.items() if k not in NON_CITY_KEYS and 'unnamed' not in k)
@@ -41,7 +36,7 @@ def get_cities_and_other_data(ordered_dict):
     return cities, data
 
 
-def set_variety(data, curr_variety):
+def set_variety(data: Dict, curr_variety: str) -> str:
     if 'variety' in data.keys() and data['variety'].strip() != '':
         curr_variety = data['variety']
     else:
@@ -49,7 +44,7 @@ def set_variety(data, curr_variety):
     return curr_variety
 
 
-def make_city_json(result, data, cities, city):
+def make_city_json(result: Dict, data: Dict, cities: Dict, city: str):
     data["price"] = cities[city]
     data["market"] = city
     result[data['variety'] + "-" + city] = dict((k, v) for k, v in data.items())
@@ -57,7 +52,7 @@ def make_city_json(result, data, cities, city):
     del data["market"]
 
 
-def csv_to_json(csv_name):
+def csv_to_json(csv_name: str):
     date = get_yyyy_mm_dd(csv_name)
     result = {}
     with open(csv_name, newline='') as csvfile:
@@ -79,7 +74,7 @@ def csv_to_json(csv_name):
             json.dump(result, jsonfile, indent=4, sort_keys=True)
             print("Success. " + str(json_name) + " created.")
 
-def push_json_to_api(json_file):
+def push_json_to_api(json_file: Dict):
     # pprint.pprint(json)
     for k in json_file:
         # pprint.pprint(json[k])
@@ -89,9 +84,3 @@ def push_json_to_api(json_file):
         response = requests.post(url, json=json_file[k])
         print(response.text)
         time.sleep(2)
-
-# def main():
-#     csv_name = parse_args(sys.argv)
-#     csv_to_json(csv_name)
-
-
