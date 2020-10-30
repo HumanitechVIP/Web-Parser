@@ -16,13 +16,17 @@ PATH_TO_JSON_FOLDER = Path("../json/")
 url = "https://croppricingapi.herokuapp.com/api/cropprices"
 
 def get_yyyy_mm_dd(csv_name: str) -> str:
-    tmp = csv_name[-14:-4].split("-")
-    if len(tmp) != 3:
+    # requires YYYY, flexible on MM and DD. Accepts 30-8-2020 and 30-08-2020
+    tmp = re.search(r'(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}', csv_name)
+    if not tmp:
         print("ERROR: Date in CSV name should be formatted DD-MM-YYYY\nExiting...")
         exit()
+    tmp = tmp.group().split("-")
+    for i in range(len(tmp)):
+        if (len(tmp[i]) is 1):
+            tmp[i] = "0" + tmp[i]
     tmp.reverse()
     return "-".join(tmp)
-
 
 def clean_str(s: str) -> str:
     return s.lower().strip(".").strip()
