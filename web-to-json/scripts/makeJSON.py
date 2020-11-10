@@ -55,7 +55,8 @@ def make_city_json(result: Dict, data: Dict, cities: Dict, city: str):
     del data["price"]
     del data["market"]
 
-
+#creates the json in the designated folder, and also pushes each json component
+# (data for each crop) to the api by calling the push to api method
 def csv_to_json(csv_name: str):
     date = get_yyyy_mm_dd(csv_name)
     result = {}
@@ -78,6 +79,8 @@ def csv_to_json(csv_name: str):
             json.dump(result, jsonfile, indent=4, sort_keys=True)
             print("Success. " + str(json_name) + " created.")
 
+
+#pushes the json component passed in to the api
 def push_json_to_api(json_file: Dict):
     # pprint.pprint(json)
     for k in json_file:

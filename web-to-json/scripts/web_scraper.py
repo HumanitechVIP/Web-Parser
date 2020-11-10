@@ -10,13 +10,18 @@ import os
 from pathlib import Path
 import makeJSON  # if this isn't found make sure scripts is src root
 
-# IMPORTANT NOTE: in chrome you need to set the downloads folder to downloaded_files
+# VERY IMPORTANT NOTE: in chrome you need to set the downloads folder to downloaded_files
 
 source = requests.get('http://www.nafis.go.ke/category/market-info/').text
-CSV_PATH = Path("downloaded_files/csvs/")
-EXCEL_PATH = Path("downloaded_files/")
+CSV_PATH = Path("downloaded_files/csvs/") # the folder to put the csvs in (then they will be converted to jsons from there)
+EXCEL_PATH = Path("downloaded_files/") # the folder the excel sheets are in when they are auto downloaded by the web parser
 
-
+# the nafis website has links that directly download files to the downloads folder
+#this method parses through the website and clicks all of those links
+#they should show up in the downloads folder
+# this method will download all of the files on the website
+# in case you need to mass download them. usually once the website is up they should
+#  be downloading one by one daily
 def get_files():
     soup = BeautifulSoup(source, 'lxml')
     div = soup.find("div", {"id": "content"})
@@ -31,6 +36,7 @@ def get_files():
     print("pausing for 15 seconds to let the downloads catch up to the code...")
     time.sleep(15)
 
+#this is just like get files but it only gets the first file, the most recent upload
 def get_file():
     soup = BeautifulSoup(source, 'lxml')
     div = soup.find("div", {"id": "content"})
@@ -46,7 +52,8 @@ def get_file():
     print("pausing for 15 seconds to let the downloads catch up to the code...")
     time.sleep(15)
 
-
+#this converts all the files in the downloaded_files directory to csvs in the /csvs directory
+# the excel files are then removed 
 def make_csvs():
     directory = os.fsencode('downloaded_files')
     for file in os.scandir(directory):
@@ -68,7 +75,8 @@ def make_csvs():
             # print("deleting")
             os.remove(file)
 
-
+#this is just like the previos method but only converts the first file to a csv and removes the excel file
+# excel comes from downloaded files directory and the csv goes to the /csvs directory
 def make_csv():
     directory = os.fsencode('downloaded_files')
     csv_name = None
@@ -97,7 +105,10 @@ def make_csv():
         raise Exception("error - file not found")
     return str(CSV_PATH) + "\\" + csv_name
 
-
+#this is the code that should run at each interval, depending on how often it's scheduled
+# it logs what it's toing to the log.txt file
+#it then downloads the most recent excel file from the nafis website and converts it to a csv
+# it then converts the csv to json, and that pushes it to the api as well
 def scheduled_job():
     # this was when we thought they posted monthly but it's more frequent
     # day_of_month = datetime.now().day
@@ -115,7 +126,6 @@ def scheduled_job():
 
 
 # SCHEDULING CODE
-# job checks the date and only runs on the 10th
 schedule.every().day.at("10:00").do(scheduled_job)
 while True:
     schedule.run_pending()
