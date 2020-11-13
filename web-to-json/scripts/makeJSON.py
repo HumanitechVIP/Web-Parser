@@ -55,7 +55,7 @@ def make_city_json(result: Dict, data: Dict, cities: Dict, city: str):
     del data["price"]
     del data["market"]
 
-#creates the json in the designated folder, and also pushes each json component
+# creates the json in the designated folder, and also pushes each json component
 # (data for each crop) to the api by calling the push to api method
 def csv_to_json(csv_name: str):
     date = get_yyyy_mm_dd(csv_name)
@@ -80,7 +80,7 @@ def csv_to_json(csv_name: str):
             print("Success. " + str(json_name) + " created.")
 
 
-#pushes the json component passed in to the api
+# pushes the json component passed in to the api
 def push_json_to_api(json_file: Dict):
     # pprint.pprint(json)
     for k in json_file:
@@ -88,6 +88,20 @@ def push_json_to_api(json_file: Dict):
         headers = {
             'Content-Type': 'application/json'
         }
-        response = requests.post(url, json=json_file[k])
-        print(response.text)
-        time.sleep(2)
+        # sleep_time = 2
+        # time.sleep(sleep_time)
+        inputs = json_file[k]
+        fixed_inputs = {}
+        # print(inputs)
+        for i in inputs:
+            if inputs[i] != "":
+                fixed_inputs[i] = inputs[i]
+        fixed_inputs["code"] += "-" + fixed_inputs["market"]
+        fixed_inputs["code"] = fixed_inputs["code"].replace(" ", "")
+        print(fixed_inputs["code"])
+        response = requests.post(url, json=fixed_inputs)
+        text = response.text
+        print("response" + text)
+
+
+
