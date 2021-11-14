@@ -12,7 +12,8 @@ import makeJSON  # if this isn't found make sure scripts is src root
 
 # VERY IMPORTANT NOTE: in chrome you need to set the downloads folder to downloaded_files
 
-source = requests.get('http://www.nafis.go.ke/category/market-info/').text
+# source = requests.get('http://www.nafis.go.ke/category/market-info/').text
+source = 'Daily-26.02.2021-Retail-prices.xlsx'
 CSV_PATH = Path("downloaded_files/csvs/") # the folder to put the csvs in (then they will be converted to jsons from
 # there)
 EXCEL_PATH = Path("downloaded_files/") # the folder the excel sheets are in when they are auto downloaded by the web
@@ -146,7 +147,7 @@ def scheduled_job():
 #     time.sleep(1)
 
 # uncomment to to put everthing in the database: gets all the files, makes csvs, makes jsons, pushes
-run_everything()
+# run_everything()
 
 # if you want to just run the code that gets the first file, makes a csv, deletes it, and makes a json
 # (what is scheduled)
@@ -154,7 +155,8 @@ run_everything()
 # name = make_csv()  # returns the name
 # print(name)
 # time.sleep(15)
-# makeJSON.csv_to_json(name)
+name='26-02-2021-Retail-prices.csv'
+makeJSON.csv_to_json(name)
 
 
 
